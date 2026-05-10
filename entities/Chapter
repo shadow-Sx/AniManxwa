@@ -1,0 +1,42 @@
+{
+  "name": "Chapter",
+  "type": "object",
+  "properties": {
+    "manga_id": {
+      "type": "string",
+      "description": "ID of the parent manga"
+    },
+    "manga_title": {
+      "type": "string",
+      "description": "Title of the parent manga for display"
+    },
+    "manga_slug": {
+      "type": "string",
+      "description": "Slug of the parent manga"
+    },
+    "season": {
+      "type": "number",
+      "description": "Season number"
+    },
+    "volume": {
+      "type": "number",
+      "description": "Volume number"
+    },
+    "chapter_number": {
+      "type": "number",
+      "description": "Chapter number"
+    },
+    "pages": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "description": "Array of page image URLs in order"
+    }
+  },
+  "required": [
+    "manga_id",
+    "manga_title",
+    "chapter_number"
+  ]
+}
