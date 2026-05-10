@@ -1,0 +1,106 @@
+{
+  "name": "Manga",
+  "type": "object",
+  "properties": {
+    "title": {
+      "type": "string",
+      "description": "Title of the manga/manhwa/manhua"
+    },
+    "slug": {
+      "type": "string",
+      "description": "URL-friendly slug auto-generated from title"
+    },
+    "description": {
+      "type": "string",
+      "description": "Synopsis/description of the manga"
+    },
+    "author": {
+      "type": "string",
+      "description": "Author name"
+    },
+    "studio": {
+      "type": "string",
+      "description": "Studio name"
+    },
+    "genres": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "description": "List of genres"
+    },
+    "categories": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "description": "List of categories"
+    },
+    "year": {
+      "type": "number",
+      "description": "Release year"
+    },
+    "type": {
+      "type": "string",
+      "enum": [
+        "manga",
+        "manhwa",
+        "manhua",
+        "novella"
+      ],
+      "description": "Content type"
+    },
+    "status": {
+      "type": "string",
+      "enum": [
+        "ongoing",
+        "completed"
+      ],
+      "description": "Publication status"
+    },
+    "access": {
+      "type": "string",
+      "enum": [
+        "free",
+        "Pullik"
+      ],
+      "default": "Bepul",
+      "description": "Access type"
+    },
+    "cover_9_16": {
+      "type": "string",
+      "description": "9:16 portrait cover image URL"
+    },
+    "banner_16_9": {
+      "type": "string",
+      "description": "16:9 banner image URL"
+    },
+    "total_volumes": {
+      "type": "number",
+      "default": 0,
+      "description": "Total number of volumes (0 = unavailable)"
+    },
+    "total_seasons": {
+      "type": "number",
+      "default": 0,
+      "description": "Total number of seasons (0 = unavailable)"
+    },
+    "view_count": {
+      "type": "number",
+      "default": 0,
+      "description": "Total read/view count"
+    },
+    "chapter_count": {
+      "type": "number",
+      "default": 0,
+      "description": "Total chapters available"
+    }
+  },
+  "required": [
+    "title",
+    "slug",
+    "type",
+    "status",
+    "access"
+  ]
+}
