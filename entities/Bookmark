@@ -1,0 +1,34 @@
+{
+  "name": "Bookmark",
+  "type": "object",
+  "properties": {
+    "manga_id": {
+      "type": "string",
+      "description": "ID of the bookmarked manga"
+    },
+    "manga_title": {
+      "type": "string",
+      "description": "Title of the bookmarked manga"
+    },
+    "manga_slug": {
+      "type": "string",
+      "description": "Slug of the bookmarked manga"
+    },
+    "manga_cover": {
+      "type": "string",
+      "description": "Cover image URL of the bookmarked manga"
+    },
+    "manga_access": {
+      "type": "string",
+      "enum": [
+        "free",
+        "premium"
+      ],
+      "description": "Access type of the manga"
+    }
+  },
+  "required": [
+    "manga_id",
+    "manga_title"
+  ]
+}
