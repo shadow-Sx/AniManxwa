@@ -1,0 +1,27 @@
+{
+  "name": "ReadingProgress",
+  "type": "object",
+  "properties": {
+    "manga_id": {
+      "type": "string",
+      "description": "ID of the manga"
+    },
+    "manga_title": {
+      "type": "string",
+      "description": "Title of the manga"
+    },
+    "chapter_id": {
+      "type": "string",
+      "description": "ID of the chapter read"
+    },
+    "chapter_number": {
+      "type": "number",
+      "description": "Chapter number read"
+    }
+  },
+  "required": [
+    "manga_id",
+    "chapter_id",
+    "chapter_number"
+  ]
+}
