@@ -24,6 +24,26 @@ router.get('/', async (req, res) => {
   }
 });
 
+// Public: genre-based recommendations (used on the Saved screen —
+// "shows more like what you've saved"). Must stay above /:id below.
+router.get('/recommendations/by-genre', async (req, res) => {
+  try {
+    const genres = (req.query.genres || '').split(',').filter(Boolean);
+    const excludeIds = (req.query.exclude || '').split(',').filter(Boolean);
+    if (genres.length === 0) return res.json([]);
+    const all = await Series.find({ _id: { $nin: excludeIds } });
+    const scored = all
+      .map((s) => ({ s, score: (s.genres || []).filter((g) => genres.includes(g)).length }))
+      .filter((x) => x.score > 0)
+      .sort((a, b) => b.score - a.score)
+      .slice(0, 12)
+      .map((x) => x.s);
+    res.json(scored);
+  } catch (e) {
+    res.status(500).json({ error: e.message });
+  }
+});
+
 // Public: one series + its chapter list (without page images, for speed)
 router.get('/:id', async (req, res) => {
   try {
