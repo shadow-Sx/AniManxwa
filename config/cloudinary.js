@@ -8,9 +8,9 @@ cloudinary.config({
 
 // Uploads a buffer directly (no temp file on disk — important since Render's
 // filesystem is ephemeral and would lose files on every redeploy/restart).
-function uploadBuffer(buffer, folder) {
+function uploadBuffer(buffer, folder, resourceType = 'image') {
   return new Promise((resolve, reject) => {
-    const stream = cloudinary.uploader.upload_stream({ folder, resource_type: 'image' }, (err, result) => {
+    const stream = cloudinary.uploader.upload_stream({ folder, resource_type: resourceType }, (err, result) => {
       if (err) return reject(err);
       resolve(result);
     });
