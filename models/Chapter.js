@@ -7,6 +7,7 @@ const chapterSchema = new mongoose.Schema(
     volume: String,
     chapter: { type: String, required: true },
     title: String,
+    pageCount: { type: Number, default: 0 },
     pages: [
       {
         url: String,
