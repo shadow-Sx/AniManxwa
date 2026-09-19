@@ -9,7 +9,7 @@ import { Home, Search, Heart, User, ShieldCheck, Plus, ArrowLeft, X, Loader2, Up
 const API_BASE = 'https://animanxwa.onrender.com';
 
 /* !!! Google Cloud Console'dan olingan Client ID shu yerga (README'ga qarang) !!! */
-const GOOGLE_CLIENT_ID = 'YOUR-CLIENT-ID.apps.googleusercontent.com';
+const GOOGLE_CLIENT_ID = '525880409391-3g1paj7k886jhctlr1n9m4komv2dnhgr.apps.googleusercontent.com';
 
 /* ----------------------------- theme ----------------------------- */
 const GlobalStyle = () => (
