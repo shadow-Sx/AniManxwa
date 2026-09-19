@@ -10,6 +10,7 @@ const adminRoutes = require('./routes/admin');
 const translatorRoutes = require('./routes/translatorRequests');
 const reportRoutes = require('./routes/reports');
 const adRoutes = require('./routes/ads');
+const authRoutes = require('./routes/auth');
 
 const app = express();
 app.use(cors({ origin: true, credentials: true }));
@@ -23,6 +24,7 @@ app.use('/api/admin', adminRoutes);
 app.use('/api/translator-requests', translatorRoutes);
 app.use('/api/reports', reportRoutes);
 app.use('/api/ads', adRoutes);
+app.use('/api/auth', authRoutes);
 
 connectDB().then(() => {
   const PORT = process.env.PORT || 10000;
