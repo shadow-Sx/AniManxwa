@@ -35,7 +35,7 @@ router.post('/', requireAdmin, upload.array('pages', 300), async (req, res) => {
       const result = await uploadBuffer(f.buffer, `animanxwa/${seriesId}`);
       pages.push({ url: result.secure_url, publicId: result.public_id });
     }
-    const doc = await Chapter.create({ seriesId, season, volume, chapter, title, pages });
+    const doc = await Chapter.create({ seriesId, season, volume, chapter, title, pageCount: pages.length, pages });
     res.status(201).json(doc);
   } catch (e) {
     res.status(500).json({ error: e.message });
