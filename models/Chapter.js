@@ -6,6 +6,7 @@ const chapterSchema = new mongoose.Schema(
     season: String,
     volume: String,
     chapter: { type: String, required: true },
+    readingId: { type: Number, unique: true, sparse: true },
     title: String,
     pageCount: { type: Number, default: 0 },
     pages: [
