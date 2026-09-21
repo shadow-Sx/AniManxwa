@@ -4,9 +4,21 @@ const Chapter = require('../models/Chapter');
 const Series = require('../models/Series');
 const requireAdmin = require('../middleware/adminAuth');
 const { uploadBuffer, deleteByPublicId } = require('../config/cloudinary');
+const { nextCounterValue } = require('../config/counter');
 
 const router = express.Router();
 const upload = multer({ storage: multer.memoryStorage(), limits: { fileSize: 15 * 1024 * 1024 } });
+
+// Public: fetch one chapter by its global reading number (this is what /Oqilmoqda-N resolves)
+router.get('/by-reading-id/:readingId', async (req, res) => {
+  try {
+    const ch = await Chapter.findOne({ readingId: Number(req.params.readingId) });
+    if (!ch) return res.status(404).json({ error: 'Topilmadi' });
+    res.json(ch);
+  } catch (e) {
+    res.status(500).json({ error: e.message });
+  }
+});
 
 // Public: fetch one chapter's pages (this is what the reader screen calls)
 router.get('/:chapterId', async (req, res) => {
@@ -35,7 +47,7 @@ router.post('/', requireAdmin, upload.array('pages', 300), async (req, res) => {
       const result = await uploadBuffer(f.buffer, `animanxwa/${seriesId}`);
       pages.push({ url: result.secure_url, publicId: result.public_id });
     }
-    const doc = await Chapter.create({ seriesId, season, volume, chapter, title, pageCount: pages.length, pages });
+    const doc = await Chapter.create({ seriesId, season, volume, chapter, title, pageCount: pages.length, readingId: await nextCounterValue('chapter'), pages });
     res.status(201).json(doc);
   } catch (e) {
     res.status(500).json({ error: e.message });
