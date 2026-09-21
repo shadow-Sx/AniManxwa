@@ -8,6 +8,20 @@ const { uploadBuffer, deleteByPublicId } = require('../config/cloudinary');
 const router = express.Router();
 const upload = multer({ storage: multer.memoryStorage(), limits: { fileSize: 15 * 1024 * 1024 } });
 
+// Builds a URL-friendly slug from a title (spaces -> hyphens, keeps original
+// casing per the requested style), adding -2, -3... if it's already taken.
+function slugify(title, existingSlugs) {
+  let base = (title || 'manga').trim().replace(/\s+/g, '-').replace(/[^a-zA-Z0-9-]/g, '');
+  if (!base) base = 'manga';
+  let slug = base;
+  let n = 2;
+  while (existingSlugs.has(slug)) {
+    slug = `${base}-${n}`;
+    n++;
+  }
+  return slug;
+}
+
 // Public: list all series with chapter counts
 router.get('/', async (req, res) => {
   try {
@@ -44,6 +58,18 @@ router.get('/recommendations/by-genre', async (req, res) => {
   }
 });
 
+// Public: one series by its slug (this is what a direct link like /Solo-Leveling resolves)
+router.get('/by-slug/:slug', async (req, res) => {
+  try {
+    const s = await Series.findOne({ slug: req.params.slug });
+    if (!s) return res.status(404).json({ error: 'Topilmadi' });
+    const chapters = await Chapter.find({ seriesId: s._id }).select('-pages').sort({ createdAt: 1 });
+    res.json({ ...s.toObject(), chapters });
+  } catch (e) {
+    res.status(500).json({ error: e.message });
+  }
+});
+
 // Public: one series + its chapter list (without page images, for speed)
 router.get('/:id', async (req, res) => {
   try {
@@ -66,7 +92,10 @@ router.post('/', requireAdmin, upload.single('cover'), async (req, res) => {
       coverUrl = result.secure_url;
       coverPublicId = result.public_id;
     }
-    const series = await Series.create({ ...data, coverUrl, coverPublicId });
+    const existing = await Series.find({}, 'slug');
+    const existingSlugs = new Set(existing.map((s) => s.slug).filter(Boolean));
+    const slug = slugify(data.title, existingSlugs);
+    const series = await Series.create({ ...data, slug, coverUrl, coverPublicId });
     res.status(201).json(series);
   } catch (e) {
     res.status(500).json({ error: e.message });
