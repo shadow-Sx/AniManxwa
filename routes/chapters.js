@@ -3,7 +3,7 @@ const multer = require('multer');
 const Chapter = require('../models/Chapter');
 const Series = require('../models/Series');
 const requireAdmin = require('../middleware/adminAuth');
-const { uploadBuffer, deleteByPublicId } = require('../config/cloudinary');
+const { uploadBuffer, deleteByPublicId, buildSliceUrls } = require('../config/cloudinary');
 const { nextCounterValue } = require('../config/counter');
 
 const router = express.Router();
@@ -42,10 +42,12 @@ router.post('/', requireAdmin, upload.array('pages', 300), async (req, res) => {
 
     // Sort by original filename so page order matches upload order (e.g. 001.jpg, 002.jpg)
     const sorted = [...req.files].sort((a, b) => a.originalname.localeCompare(b.originalname, undefined, { numeric: true }));
+    const sliceable = series.type === 'manhwa' || series.type === 'manhua';
     const pages = [];
     for (const f of sorted) {
       const result = await uploadBuffer(f.buffer, `animanxwa/${seriesId}`);
-      pages.push({ url: result.secure_url, publicId: result.public_id });
+      const slices = sliceable ? buildSliceUrls(result.public_id, result.width, result.height) : [];
+      pages.push({ url: result.secure_url, publicId: result.public_id, width: result.width, height: result.height, slices });
     }
     const doc = await Chapter.create({ seriesId, season, volume, chapter, title, pageCount: pages.length, readingId: await nextCounterValue('chapter'), pages });
     res.status(201).json(doc);
