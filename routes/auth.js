@@ -27,7 +27,7 @@ router.post('/google', async (req, res) => {
     }
 
     const token = jwt.sign({ userId: user._id, googleId: user.googleId, isAdmin: user.isAdmin }, process.env.JWT_SECRET, { expiresIn: '30d' });
-    res.json({ token, user: { id: user._id, googleId: user.googleId, name: user.name, email: user.email, picture: user.picture, isAdmin: user.isAdmin } });
+    res.json({ token, user: { id: user._id, googleId: user.googleId, name: user.name, email: user.email, picture: user.picture, isAdmin: user.isAdmin, isSubscribed: user.isSubscribed, downloadBonusRemaining: user.downloadBonusRemaining } });
   } catch (e) {
     res.status(401).json({ error: "Google orqali tekshirish muvaffaqiyatsiz bo'ldi" });
   }
