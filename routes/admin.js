@@ -1,5 +1,7 @@
 const express = require('express');
 const jwt = require('jsonwebtoken');
+const User = require('../models/User');
+const requireAdmin = require('../middleware/adminAuth');
 
 const router = express.Router();
 
@@ -16,6 +18,26 @@ router.post('/verify', (req, res) => {
     maxAge: 4 * 60 * 60 * 1000,
   });
   res.json({ token, expiresIn: '4h' });
+});
+
+// Admin: list Google-logged-in users (so subscription status can be granted
+// manually until a real payment processor is connected)
+router.get('/users', requireAdmin, async (req, res) => {
+  try {
+    res.json(await User.find().sort({ createdAt: -1 }));
+  } catch (e) {
+    res.status(500).json({ error: e.message });
+  }
+});
+
+router.patch('/users/:id/subscription', requireAdmin, async (req, res) => {
+  try {
+    const user = await User.findByIdAndUpdate(req.params.id, { isSubscribed: !!req.body.isSubscribed }, { new: true });
+    if (!user) return res.status(404).json({ error: 'Topilmadi' });
+    res.json(user);
+  } catch (e) {
+    res.status(500).json({ error: e.message });
+  }
 });
 
 module.exports = router;
