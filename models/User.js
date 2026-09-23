@@ -7,6 +7,8 @@ const userSchema = new mongoose.Schema(
     name: String,
     picture: String,
     isAdmin: { type: Boolean, default: false },
+    isSubscribed: { type: Boolean, default: false },
+    downloadBonusRemaining: { type: Number, default: 10 },
   },
   { timestamps: true }
 );
