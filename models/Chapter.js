@@ -13,6 +13,9 @@ const chapterSchema = new mongoose.Schema(
       {
         url: String,
         publicId: String,
+        width: Number,
+        height: Number,
+        slices: [String],
       },
     ],
   },
