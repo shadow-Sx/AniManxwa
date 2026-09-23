@@ -27,4 +27,22 @@ async function deleteByPublicId(publicId) {
   }
 }
 
-module.exports = { cloudinary, uploadBuffer, deleteByPublicId };
+// Splits one tall manhwa strip into ~`count` short horizontal slices, purely
+// as URL strings — Cloudinary crops each on first request and caches it on
+// its CDN, so this never touches our own server or storage. The last slice
+// absorbs whatever height doesn't divide evenly.
+function buildSliceUrls(publicId, width, height, count = 100) {
+  if (!width || !height) return [];
+  const cloudName = process.env.CLOUDINARY_CLOUD_NAME;
+  const sliceHeight = Math.max(1, Math.floor(height / count));
+  const urls = [];
+  for (let i = 0; i < count; i++) {
+    const y = i * sliceHeight;
+    if (y >= height) break;
+    const h = i === count - 1 ? height - y : Math.min(sliceHeight, height - y);
+    urls.push(`https://res.cloudinary.com/${cloudName}/image/upload/c_crop,w_${width},h_${h},x_0,y_${y}/f_auto,q_auto/${publicId}`);
+  }
+  return urls;
+}
+
+module.exports = { cloudinary, uploadBuffer, deleteByPublicId, buildSliceUrls };
