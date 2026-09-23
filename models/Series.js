@@ -14,6 +14,7 @@ const seriesSchema = new mongoose.Schema(
     volumes: { type: Number, default: 0 },
     seasons: { type: Number, default: 0 },
     genres: [String],
+    tags: [String],
     coverUrl: String,
     coverPublicId: String,
   },
